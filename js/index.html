@@ -1,0 +1,103 @@
+<!--
+Copyright (c) 2018  Christian Berger <christian.berger@gu.se>
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Load libcluon. -->
+        <script src="libcluon-v0.0.73.js"></script>
+    </head>
+<body>
+
+<script>
+    // "Instantiate" libcluon.
+    var __libcluon = libcluon();
+
+    // Function to load data from a remote destination.
+    function getResourceFrom(url) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", url, false /*asynchronous request*/);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
+
+    // Check for availability of WebSockets.
+    if ("WebSocket" in window) {
+        // Read data in binary from the WebSocket.
+        var ws = new WebSocket("ws://" + window.location.host + "/");
+        ws.binaryType = 'arraybuffer';
+
+        ws.onopen = function() {
+            console.log("Connected.");
+
+            // Load the ODVD message specification file to have information about the messages to decode and encode.
+            var odvdMessageSpecificationFile = getResourceFrom("example.odvd");
+            console.log("Loaded " + __libcluon.setMessageSpecification(odvdMessageSpecificationFile) + " messages from specification.");
+        };
+
+        ws.onmessage = function(evt) {
+            // Got new data from the WebSocket; now, try to decode it into JSON using the supplied message specification file.
+            var data = JSON.parse(__libcluon.decodeEnvelopeToJSON(evt.data));
+            console.log(data);
+
+            // Check for message ID 2221...
+            if (data.dataType == 2221) {
+                // found message. Now, extract values from the fields and do something with the data...
+                var number = data.example_Ping.number * 1.1;
+
+                var textInBase64 = data.example_Ping.text;
+                var textDecodedFromBase64 = window.atob(textInBase64);
+                var textReversed = textDecodedFromBase64.split('').reverse().join('');
+
+                // ...and reply with message ID 2222.
+                {
+                    var replyTextInBase64 = window.btoa(textReversed);
+                    var replyInJSON = "{\"text\":\"" + replyTextInBase64 + "\",\"number\":" + number  + "}";
+
+                    // Transform JSON response into binary Protobuf-encoded data...
+                    const MESSAGE_ID = 2222;
+                    const SENDER_STAMP = 0; // If you have multiple messages of the same type that you want to distinguish at the receiver, simply set the SENDER_STAMP to different values.
+                    var replyInProtobuf = __libcluon.encodeEnvelopeFromJSONWithoutTimeStamps(replyInJSON, MESSAGE_ID, SENDER_STAMP);
+
+                    // convert into uint8 array buffer...
+                    strToAB = str =>
+                     new Uint8Array(str.split('')
+                       .map(c => c.charCodeAt(0))).buffer;
+
+                    // and send via the websocket.
+                    ws.send(strToAB(replyInProtobuf), { binary: true });
+                }
+            }
+        };
+
+        ws.onclose = function() {
+            console.log("Connection is closed.");
+        };
+
+    }
+    else {
+        console.log("WebSocket is not supported by your Browserb!");
+    }
+</script>
+
+</body>
+</html>
