@@ -1,7 +1,7 @@
 # cluon-javascript
 This project provides a minimum viable product (MVP) demonstrating how to communicate between JavaScript and [OD4Sessions](https://github.com/chalmers-revere/opendlv) using [libcluon](https://github.com/chrberger/libcluon) and hence, connecting JavaScript and C++ to exchange data bi-directionally.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![x86_64](https://img.shields.io/badge/platform-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) [![armhf](https://img.shields.io/badge/platform-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-armhf/tags/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![x86_64/js](https://img.shields.io/badge/platform-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) [![x86_64/cpp](https://img.shields.io/badge/platform-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
 
 ## Table of Contents
 * [Features](#features)
@@ -14,7 +14,7 @@ This project provides a minimum viable product (MVP) demonstrating how to commun
 * Written in highly portable and high quality C++14
 * Sending data in [Protobuf](https://developers.google.com/protocol-buffers/) from C++ to your JavaScript application
 * Sending data in [Protobuf](https://developers.google.com/protocol-buffers/) from JavaScript to your C++ application
-* Available as Docker images for [x86_64](https://hub.docker.com/r/chrberger/cluon-javascript-amd64/tags/) and [armhf](https://hub.docker.com/r/chrberger/cluon-javascript-armhf/tags/)
+* Available as Docker images for [x86_64/js](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) and [x86_64/cpp](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
 
 ## Dependencies
 No dependencies! You just need a C++14-compliant compiler to compile this
@@ -24,10 +24,6 @@ project as it ships its dependencies as part of the source distribution:
 )](https://www.gnu.org/licenses/gpl-3.0.txt)
 
 ## Usage
-This microservice is created automatically on changes to this repository via Docker's public registry for:
-* [x86_64](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/)
-* [armhf](https://hub.docker.com/r/chrberger/cluon-javascript-js-armhf/tags/)
-
 1. Running the webserver to serve the JavaScript application serving data from [OD4Session](https://github.com/chalmers-revere/opendlv) `111`:
 ```
 docker run --rm -ti --net=host chrberger/cluon-javascript-js-amd64:latest --cid=111
