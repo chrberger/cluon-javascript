@@ -1,7 +1,7 @@
 # cluon-javascript
 This project provides a minimum viable product (MVP) demonstrating how to communicate between JavaScript and [OD4Sessions](https://github.com/chalmers-revere/opendlv) using [libcluon](https://github.com/chrberger/libcluon) and hence, connecting JavaScript and C++ to exchange data bi-directionally.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![x86_64/js](https://img.shields.io/badge/platform-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) [![x86_64/cpp](https://img.shields.io/badge/platform-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![x86_64/js](https://img.shields.io/badge/js-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) [![x86_64/cpp](https://img.shields.io/badge/cpp-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
 
 ## Table of Contents
 * [Features](#features)
