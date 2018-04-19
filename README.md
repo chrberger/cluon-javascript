@@ -34,6 +34,8 @@ docker run --rm -ti --net=host chrberger/cluon-javascript-js-amd64:latest --cid=
 docker run --rm -ti --net=host chrberger/cluon-javascript-cpp-amd64:latest ping-pong --cid=111
 ```
 
+Now, simply point your web-browser to http://localhost:8082 and open the JavaScript console to see the output.
+
 ## Building
 To build these microservices, simply change in the respective folders.
 
