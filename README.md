@@ -1,7 +1,7 @@
 # cluon-javascript
 This project provides a minimum viable product (MVP) demonstrating how to communicate between JavaScript and [OD4Sessions](https://github.com/chalmers-revere/opendlv) using [libcluon](https://github.com/chrberger/libcluon) and hence, connecting JavaScript and C++ to exchange data bi-directionally.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![x86_64/js](https://img.shields.io/badge/js-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) [![x86_64/cpp](https://img.shields.io/badge/cpp-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![x86_64/js](https://img.shields.io/badge/js-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) [![x86_64/cpp](https://img.shields.io/badge/cpp-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/) [![armhf/js](https://img.shields.io/badge/js-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-armhf/tags/) [![armhf/cpp](https://img.shields.io/badge/cpp-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-armhf/tags/)
 
 ## Table of Contents
 * [Features](#features)
@@ -15,6 +15,8 @@ This project provides a minimum viable product (MVP) demonstrating how to commun
 * Sending data in [Protobuf](https://developers.google.com/protocol-buffers/) from C++ to your JavaScript application
 * Sending data in [Protobuf](https://developers.google.com/protocol-buffers/) from JavaScript to your C++ application
 * Available as Docker images for [x86_64/js](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) and [x86_64/cpp](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
+* Description of the [C++](https://github.com/chrberger/cluon-javascript/blob/master/cpp/README.md) part of this ping-pong application
+* Description of the [JavaScript](https://github.com/chrberger/cluon-javascript/blob/master/js/README.md) part of this ping-pong application
 
 ## Dependencies
 No dependencies! You just need a C++14-compliant compiler to compile this
@@ -24,6 +26,12 @@ project as it ships its dependencies as part of the source distribution:
 )](https://www.gnu.org/licenses/gpl-3.0.txt)
 
 ## Usage
+This microservice is provided via Docker's public registry for:
+* [![x86_64/js](https://img.shields.io/badge/js-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/)
+* [![x86_64/cpp](https://img.shields.io/badge/cpp-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
+* [![armhf/js](https://img.shields.io/badge/js-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-armhf/tags/)
+* [![armhf/cpp](https://img.shields.io/badge/cpp-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-armhf/tags/)
+
 1. Running the webserver to serve the JavaScript application serving data from [OD4Session](https://github.com/chalmers-revere/opendlv) `111`:
 ```
 docker run --rm -ti --net=host chrberger/cluon-javascript-js-amd64:latest --cid=111
@@ -37,7 +45,7 @@ docker run --rm -ti --net=host chrberger/cluon-javascript-cpp-amd64:latest ping-
 Now, simply point your web-browser to http://localhost:8082 and open the JavaScript console to see the output.
 
 ## Building
-To build these microservices, simply change in the respective folders.
+To build these microservices, simply change to the respective folders.
 
 1. Build the JavaScript application:
 ```

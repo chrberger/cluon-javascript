@@ -42,8 +42,8 @@ DEALINGS IN THE SOFTWARE.
 
     // Check for availability of WebSockets.
     if ("WebSocket" in window) {
-        // Read data in binary from the WebSocket.
-        var ws = new WebSocket("ws://" + window.location.host + "/");
+        // Read data in binary from the WebSocket, channel "od4".
+        var ws = new WebSocket("ws://" + window.location.host + "/", "od4");
         ws.binaryType = 'arraybuffer';
 
         ws.onopen = function() {
