@@ -14,7 +14,6 @@ This project provides a minimum viable product (MVP) demonstrating how to commun
 * Written in highly portable and high quality C++14
 * Sending data in [Protobuf](https://developers.google.com/protocol-buffers/) from C++ to your JavaScript application
 * Sending data in [Protobuf](https://developers.google.com/protocol-buffers/) from JavaScript to your C++ application
-* Available as Docker images for [x86_64/js](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/) and [x86_64/cpp](https://hub.docker.com/r/chrberger/cluon-javascript-cpp-amd64/tags/)
 * Description of the [C++](https://github.com/chrberger/cluon-javascript/blob/master/cpp/README.md) part of this ping-pong application
 * Description of the [JavaScript](https://github.com/chrberger/cluon-javascript/blob/master/js/README.md) part of this ping-pong application
 
