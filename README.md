@@ -44,17 +44,8 @@ docker run --rm -ti --net=host chrberger/cluon-javascript-cpp-amd64:latest ping-
 Now, simply point your web-browser to http://localhost:8082 and open the JavaScript console to see the output.
 
 ## Building
-To build these microservices, simply change to the respective folders.
-
-1. Build the JavaScript application:
-```
-docker build -t js -f Dockerfile.amd64 .
-```
-
-2. Build the C++ application:
-```
-docker build -t cpp -f Dockerfile.amd64 .
-```
+* Description of the [C++](https://github.com/chrberger/cluon-javascript/blob/master/cpp/README.md) part of this ping-pong application
+* Description of the [JavaScript](https://github.com/chrberger/cluon-javascript/blob/master/js/README.md) part of this ping-pong application
 
 ## License
 
