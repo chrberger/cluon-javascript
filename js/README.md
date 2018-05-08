@@ -18,7 +18,7 @@ First, a recent version of [libcluon](https://github.com/chrberger/libcluon) nee
 to be added; a complete list of current version is available here: https://bintray.com/chrberger/libcluon/javascript#files
 
 ```javascript
-<script src="libcluon-v0.0.73.js"></script>
+<script src="libcluon-v0.0.89.js"></script>
 ```
 
 Next, you need to set a handle to [libcluon](https://github.com/chrberger/libcluon)
@@ -123,8 +123,8 @@ No dependencies! You just need a modern JavaScript-engine to interpret `libcluon
 
 ## Usage
 This microservice is provided via Docker's public registry for:
-* [![x86_64/js](https://img.shields.io/badge/cpp-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/)
-* [![armhf/js](https://img.shields.io/badge/cpp-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-armhf/tags/)
+* [![x86_64/js](https://img.shields.io/badge/js-x86_64-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-amd64/tags/)
+* [![armhf/js](https://img.shields.io/badge/js-armhf-blue.svg)](https://hub.docker.com/r/chrberger/cluon-javascript-js-armhf/tags/)
 
 Running the JavaScript demo program to send data in time-triggered mode; the last
 parameter `--cid=111` provides the `OD4Session` conference identifier that must

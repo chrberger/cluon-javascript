@@ -27,10 +27,10 @@ This compiler is contained in the single-file, header-only distribution. To comp
 the message compiler from the header-only library, we set the compiler definition
 `HAVE_CLUON_MSC`. As the GNU compiler does not allow to create executables from
 a given .hpp file, we create a symbolic link to the single-file, header-only
-`cluon-complete-v0.0.73.hpp` file:
+`cluon-complete-v0.0.89.hpp` file:
 
 ```
-ln -sf cluon-complete-v0.0.73.hpp.hpp cluon-complete.cpp
+ln -sf cluon-complete-v0.0.89.hpp.hpp cluon-complete.cpp
 ```
 
 Now, we compile the executable for the message compiler using a C++14-compliant
@@ -118,7 +118,7 @@ docker run --rm -ti --net=host chrberger/cluon-javascript-cpp-amd64:latest ping-
 
 You can check whether this program works properly by using [`cluon-livefeed`](https://github.com/chrberger/cluon-livefeed):
 ```
-docker run --rm -ti --init --net=host -v $PWD:/opt chrberger/cluon-livefeed-multi:v0.0.73 --cid=111 --odvd=/opt/example.odvd
+docker run --rm -ti --init --net=host -v $PWD:/opt chrberger/cluon-livefeed-multi:v0.0.89 --cid=111 --odvd=/opt/example.odvd
 ```
 
 ## Building
