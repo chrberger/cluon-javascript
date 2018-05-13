@@ -1,6 +1,6 @@
 // This is an auto-generated header-only single-file distribution of libcluon.
-// Date: Tue, 08 May 2018 19:13:56 +0200
-// Version: 0.0.90
+// Date: Sun, 13 May 2018 21:30:49 +0200
+// Version: 0.0.96
 //
 //
 // Implementation of N4562 std::experimental::any (merged into C++17) for C++11 compilers.
@@ -3748,8 +3748,8 @@ class LIB_API TimeStamp {
         TimeStamp() = default;
         TimeStamp(const TimeStamp&) = default;
         TimeStamp& operator=(const TimeStamp&) = default;
-        TimeStamp(TimeStamp&&) noexcept = default; // NOLINT
-        TimeStamp& operator=(TimeStamp&&) noexcept = default; // NOLINT
+        TimeStamp(TimeStamp&&) = default; // NOLINT
+        TimeStamp& operator=(TimeStamp&&) = default; // NOLINT
         ~TimeStamp() = default;
 
     public:
@@ -3912,8 +3912,8 @@ class LIB_API Envelope {
         Envelope() = default;
         Envelope(const Envelope&) = default;
         Envelope& operator=(const Envelope&) = default;
-        Envelope(Envelope&&) noexcept = default; // NOLINT
-        Envelope& operator=(Envelope&&) noexcept = default; // NOLINT
+        Envelope(Envelope&&) = default; // NOLINT
+        Envelope& operator=(Envelope&&) = default; // NOLINT
         ~Envelope() = default;
 
     public:
@@ -4112,8 +4112,8 @@ class LIB_API PlayerCommand {
         PlayerCommand() = default;
         PlayerCommand(const PlayerCommand&) = default;
         PlayerCommand& operator=(const PlayerCommand&) = default;
-        PlayerCommand(PlayerCommand&&) noexcept = default; // NOLINT
-        PlayerCommand& operator=(PlayerCommand&&) noexcept = default; // NOLINT
+        PlayerCommand(PlayerCommand&&) = default; // NOLINT
+        PlayerCommand& operator=(PlayerCommand&&) = default; // NOLINT
         ~PlayerCommand() = default;
 
     public:
@@ -4276,8 +4276,8 @@ class LIB_API PlayerStatus {
         PlayerStatus() = default;
         PlayerStatus(const PlayerStatus&) = default;
         PlayerStatus& operator=(const PlayerStatus&) = default;
-        PlayerStatus(PlayerStatus&&) noexcept = default; // NOLINT
-        PlayerStatus& operator=(PlayerStatus&&) noexcept = default; // NOLINT
+        PlayerStatus(PlayerStatus&&) = default; // NOLINT
+        PlayerStatus& operator=(PlayerStatus&&) = default; // NOLINT
         ~PlayerStatus() = default;
 
     public:
@@ -4642,6 +4642,8 @@ inline cluon::data::TimeStamp now() noexcept {
 
     // Link against ws2_32.lib for networking.
     #pragma comment(lib, "ws2_32.lib")
+    // Link against iphlpapi.lib for address resolving.
+    #pragma comment(lib, "iphlpapi.lib")
 
     // Avoid include definitions from Winsock v1.
     #define WIN32_LEAN_AND_MEAN
@@ -4817,7 +4819,7 @@ class LIBCLUON_API MetaMessage {
     };
 
    public:
-    MetaMessage()                    = default;
+    MetaMessage() noexcept;
     MetaMessage(const MetaMessage &) = default;
     MetaMessage(MetaMessage &&)      = default;
     MetaMessage &operator=(const MetaMessage &) = default;
@@ -8418,6 +8420,7 @@ inline std::map<std::string, std::string> getCommandlineArguments(int32_t argc, 
 //#include "cluon/MetaMessage.hpp"
 
 namespace cluon {
+
 inline MetaMessage::MetaField::MetaFieldDataTypes MetaMessage::MetaField::fieldDataType() const noexcept {
     return m_fieldDataType;
 }
@@ -8464,6 +8467,8 @@ inline MetaMessage::MetaField &MetaMessage::MetaField::defaultInitializationValu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+inline MetaMessage::MetaMessage() noexcept {}
 
 inline std::string MetaMessage::packageName() const noexcept {
     return m_packageName;
@@ -8984,22 +8989,22 @@ inline UDPSender::UDPSender(const std::string &sendToAddress, uint16_t sendToPor
 
         m_socket = ::socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-#ifndef WIN32
         // Bind to random address/port but store sender port.
-        struct sockaddr_in sendFromAddress;
-        std::memset(&sendFromAddress, 0, sizeof(sendFromAddress));
-        sendFromAddress.sin_family = AF_INET;
-        sendFromAddress.sin_port = 0; // Randomly choose a port to bind.
-        if (0 == ::bind(m_socket, reinterpret_cast<struct sockaddr *>(&sendFromAddress), sizeof(sendFromAddress))) { // NOLINT
-            struct sockaddr tmpAddr;
-            socklen_t length = sizeof(tmpAddr);
-            if (0 == ::getsockname(m_socket, &tmpAddr, &length)) {
-                struct sockaddr_in tmpAddrIn;
-                std::memcpy(&tmpAddrIn, &tmpAddr, sizeof(tmpAddrIn)); // NOLINT
-                m_portToSentFrom = ntohs(tmpAddrIn.sin_port);
+        if (!(m_socket < 0)) {
+            struct sockaddr_in sendFromAddress;
+            std::memset(&sendFromAddress, 0, sizeof(sendFromAddress));
+            sendFromAddress.sin_family = AF_INET;
+            sendFromAddress.sin_port   = 0;                                                                              // Randomly choose a port to bind.
+            if (0 == ::bind(m_socket, reinterpret_cast<struct sockaddr *>(&sendFromAddress), sizeof(sendFromAddress))) { // NOLINT
+                struct sockaddr tmpAddr;
+                socklen_t length = sizeof(tmpAddr);
+                if (0 == ::getsockname(m_socket, &tmpAddr, &length)) {
+                    struct sockaddr_in tmpAddrIn;
+                    std::memcpy(&tmpAddrIn, &tmpAddr, sizeof(tmpAddrIn)); // NOLINT
+                    m_portToSentFrom = ntohs(tmpAddrIn.sin_port);
+                }
             }
         }
-#endif
 
 #ifdef WIN32
         if (m_socket < 0) {
@@ -9078,7 +9083,13 @@ inline std::pair<ssize_t, int32_t> UDPSender::send(std::string &&data) const noe
 
 // clang-format off
 #ifdef WIN32
-    #include <errno.h>
+    #include <cstdio>
+    #include <cerrno>
+
+    #include <winsock2.h>
+    #include <iphlpapi.h>
+    #include <ws2tcpip.h>
+
     #include <iostream>
 #else
     #include <arpa/inet.h>
@@ -9089,7 +9100,7 @@ inline std::pair<ssize_t, int32_t> UDPSender::send(std::string &&data) const noe
     #include <unistd.h>
 #endif
 
-#ifdef __linux__
+#ifndef WIN32
     #include <ifaddrs.h>
     #include <netdb.h>
 #endif
@@ -9251,13 +9262,32 @@ inline UDPReceiver::UDPReceiver(const std::string &receiveFromAddress,
             }
         }
 
-#ifdef __linux__
         // Fill list of local IP address to avoid sending data to ourselves.
         if (!(m_socket < 0)) {
+#ifdef WIN32
+            DWORD size{0};
+            if (ERROR_BUFFER_OVERFLOW == GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, NULL, NULL, &size)) {
+                PIP_ADAPTER_ADDRESSES adapters = reinterpret_cast<PIP_ADAPTER_ADDRESSES>(malloc(size));
+                if (ERROR_SUCCESS == GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, NULL, adapters, &size)) {
+                    for (PIP_ADAPTER_ADDRESSES adapter = adapters; nullptr != adapter; adapter = adapter->Next) {
+                        for (PIP_ADAPTER_UNICAST_ADDRESS unicastAddress = adapter->FirstUnicastAddress; unicastAddress != NULL;
+                             unicastAddress                             = unicastAddress->Next) {
+                            if (AF_INET == unicastAddress->Address.lpSockaddr->sa_family) {
+                                ::getnameinfo(unicastAddress->Address.lpSockaddr, unicastAddress->Address.iSockaddrLength, nullptr, 0, NULL, 0, NI_NUMERICHOST);
+                                std::memcpy(&tmpSocketAddress, unicastAddress->Address.lpSockaddr, sizeof(tmpSocketAddress));
+                                const unsigned long LOCAL_IP = tmpSocketAddress.sin_addr.s_addr;
+                                m_listOfLocalIPAddresses.insert(LOCAL_IP);
+                            }
+                        }
+                    }
+                }
+                free(adapters);
+            }
+#else
             struct ifaddrs *interfaceAddress;
             if (0 == ::getifaddrs(&interfaceAddress)) {
                 for (struct ifaddrs *it = interfaceAddress; nullptr != it; it = it->ifa_next) {
-                    if ( (nullptr != it->ifa_addr) && (it->ifa_addr->sa_family == AF_INET) ) {
+                    if ((nullptr != it->ifa_addr) && (it->ifa_addr->sa_family == AF_INET)) {
                         if (0 == ::getnameinfo(it->ifa_addr, sizeof(struct sockaddr_in), nullptr, 0, nullptr, 0, NI_NUMERICHOST)) {
                             std::memcpy(&tmpSocketAddress, it->ifa_addr, sizeof(tmpSocketAddress));
                             const unsigned long LOCAL_IP = tmpSocketAddress.sin_addr.s_addr;
@@ -9267,8 +9297,8 @@ inline UDPReceiver::UDPReceiver(const std::string &receiveFromAddress,
                 }
                 ::freeifaddrs(interfaceAddress);
             }
-        }
 #endif
+        }
 
         if (!(m_socket < 0)) {
             // Constructing the receiving thread could fail.
@@ -9463,14 +9493,14 @@ inline void UDPReceiver::readFromSocket() noexcept {
                                 remoteAddress.data(),
                                 remoteAddress.max_size());
                     const unsigned long RECVFROM_IP{reinterpret_cast<struct sockaddr_in *>(&remote)->sin_addr.s_addr}; // NOLINT
-                    const uint16_t RECVFROM_PORT{ntohs(reinterpret_cast<struct sockaddr_in *>(&remote)->sin_port)}; // NOLINT
+                    const uint16_t RECVFROM_PORT{ntohs(reinterpret_cast<struct sockaddr_in *>(&remote)->sin_port)};    // NOLINT
 
                     // Check if the bytes actually came from us.
                     bool sentFromUs{false};
                     {
-                        auto pos = m_listOfLocalIPAddresses.find(RECVFROM_IP);
+                        auto pos                   = m_listOfLocalIPAddresses.find(RECVFROM_IP);
                         const bool sentFromLocalIP = (pos != m_listOfLocalIPAddresses.end() && (*pos == RECVFROM_IP));
-                        sentFromUs = sentFromLocalIP && (m_localSendFromPort == RECVFROM_PORT);
+                        sentFromUs                 = sentFromLocalIP && (m_localSendFromPort == RECVFROM_PORT);
                     }
 
                     // Create a pipeline entry to be processed concurrently.
@@ -12744,9 +12774,12 @@ inline OD4Session::OD4Session(uint16_t CID, std::function<void(cluon::data::Enve
     , m_mapOfDataTriggeredDelegatesMutex{}
     , m_mapOfDataTriggeredDelegates{} {
     m_receiver = std::make_unique<cluon::UDPReceiver>(
-        "225.0.0." + std::to_string(CID), 12175, [this](std::string &&data, std::string &&from, std::chrono::system_clock::time_point &&timepoint) {
+        "225.0.0." + std::to_string(CID),
+        12175,
+        [this](std::string &&data, std::string &&from, std::chrono::system_clock::time_point &&timepoint) {
             this->callback(std::move(data), std::move(from), std::move(timepoint));
-        }, m_sender.getSendFromPort() /* passing our local send from port to the UDPReceiver to filter out our own bytes */);
+        },
+        m_sender.getSendFromPort() /* passing our local send from port to the UDPReceiver to filter out our own bytes */);
 }
 
 inline void OD4Session::timeTrigger(float freq, std::function<bool()> delegate) noexcept {
@@ -15309,8 +15342,8 @@ class LIB_API {{%MESSAGE%}} {
         {{%MESSAGE%}}() = default;
         {{%MESSAGE%}}(const {{%MESSAGE%}}&) = default;
         {{%MESSAGE%}}& operator=(const {{%MESSAGE%}}&) = default;
-        {{%MESSAGE%}}({{%MESSAGE%}}&&) noexcept = default; // NOLINT
-        {{%MESSAGE%}}& operator=({{%MESSAGE%}}&&) noexcept = default; // NOLINT
+        {{%MESSAGE%}}({{%MESSAGE%}}&&) = default; // NOLINT
+        {{%MESSAGE%}}& operator=({{%MESSAGE%}}&&) = default; // NOLINT
         ~{{%MESSAGE%}}() = default;
 
     public:
@@ -15843,26 +15876,40 @@ inline int32_t cluon_replay(int32_t argc, char **argv, bool monitorSTDIN) {
 
         std::fstream fin(recFile, std::ios::in|std::ios::binary);
         if (fin.good()) {
-            // Listen for data from stdin.
             std::atomic<bool> playCommandUpdate{false};
             std::mutex playerCommandMutex;
             cluon::data::PlayerCommand playerCommand;
+
+            auto playerCommandHandler = [&playCommandUpdate, &playerCommandMutex, &playerCommand](cluon::data::Envelope &&env){
+                cluon::data::PlayerCommand pc = cluon::extractMessage<cluon::data::PlayerCommand>(std::move(env));
+                {
+                    std::lock_guard<std::mutex> lck(playerCommandMutex);
+                    playerCommand = pc;
+                }
+                playCommandUpdate = true;
+            };
+
+            // OD4Session.
+            std::unique_ptr<cluon::OD4Session> od4;
+            if (0 != commandlineArguments.count("cid")) {
+                // Interface to a running OpenDaVINCI session (ignoring any incoming Envelopes).
+                od4 = std::make_unique<cluon::OD4Session>(static_cast<uint16_t>(std::stoi(commandlineArguments["cid"]))); // LCOV_EXCL_LINE
+                if (od4 && !monitorSTDIN) {
+                    od4->dataTrigger(cluon::data::PlayerCommand::ID(), playerCommandHandler);
+                }
+            }
+
+            // Listen for data from stdin.
             if (monitorSTDIN) {
-                std::thread t([&playCommandUpdate, &playerCommandMutex, &playerCommand](){
-                    while (std::cin.good()) {
-                        auto tmp{cluon::extractEnvelope(std::cin)};
-                        if (tmp.first) {
-                            if (tmp.second.dataType() == cluon::data::PlayerCommand::ID()) {
-                                cluon::data::PlayerCommand pc = cluon::extractMessage<cluon::data::PlayerCommand>(std::move(tmp.second));
-                                {
-                                    std::lock_guard<std::mutex> lck(playerCommandMutex);
-                                    playerCommand = pc;
-                                }
-                                playCommandUpdate = true;
-                            }
+                std::thread t([&playerCommandHandler](){ // LCOV_EXCL_LINE
+                    while (std::cin.good()) { // LCOV_EXCL_LINE
+                        auto tmp{cluon::extractEnvelope(std::cin)}; // LCOV_EXCL_LINE
+                        if (tmp.first && (tmp.second.dataType() == cluon::data::PlayerCommand::ID())) { // LCOV_EXCL_LINE
+                            cluon::data::Envelope env = tmp.second; // LCOV_EXCL_LINE
+                            playerCommandHandler(std::move(env)); // LCOV_EXCL_LINE
                         }
                     }
-                });
+                }); // LCOV_EXCL_LINE
             }
 
             // Listen for PlayerStatus updates.
@@ -15876,13 +15923,6 @@ inline int32_t cluon_replay(int32_t argc, char **argv, bool monitorSTDIN) {
                 }
                 playerStatusUpdate = true;
             };
-
-            // OD4Session.
-            std::unique_ptr<cluon::OD4Session> od4;
-            if (0 != commandlineArguments.count("cid")) {
-                // Interface to a running OpenDaVINCI session (ignoring any incoming Envelopes).
-                od4 = std::make_unique<cluon::OD4Session>(static_cast<uint16_t>(std::stoi(commandlineArguments["cid"])), [](auto){});
-            }
 
             {
                 std::string s;
@@ -15957,10 +15997,12 @@ inline int32_t cluon_replay(int32_t argc, char **argv, bool monitorSTDIN) {
                        .serializedData(s);
 
                     if (od4 && od4->isRunning()) {
-                        od4->send(std::move(env));
+                        cluon::data::Envelope e = env;
+                        od4->send(std::move(e));
                     }
-                    else {
-                        std::cout << cluon::serializeEnvelope(std::move(env));
+                    if (playBackToStdout) {
+                        cluon::data::Envelope e = env;
+                        std::cout << cluon::serializeEnvelope(std::move(e));
                         std::cout.flush();
                     }
                     playerStatusUpdate = false;
@@ -15968,7 +16010,7 @@ inline int32_t cluon_replay(int32_t argc, char **argv, bool monitorSTDIN) {
                 if (playCommandUpdate) {
                     std::lock_guard<std::mutex> lck(playerCommandMutex);
                     if ( (playerCommand.command() == 1) || (playerCommand.command() == 2) ) {
-                        play = !(2 == playerCommand.command());
+                        play = !(2 == playerCommand.command()); // LCOV_EXCL_LINE
                     }
 
                     std::clog << PROGRAM << ": Change state: " << +playerCommand.command() << ", play = " << play << std::endl;
@@ -15983,18 +16025,20 @@ inline int32_t cluon_replay(int32_t argc, char **argv, bool monitorSTDIN) {
                     auto next = player.getNextEnvelopeToBeReplayed();
                     if (next.first) {
                         if (od4 && od4->isRunning()) {
-                            od4->send(std::move(next.second));
+                            cluon::data::Envelope e = next.second;
+                            od4->send(std::move(e));
                         }
                         if (playBackToStdout) {
-                            std::cout << cluon::serializeEnvelope(std::move(next.second));
+                            cluon::data::Envelope e = next.second;
+                            std::cout << cluon::serializeEnvelope(std::move(e));
                             std::cout.flush();
                         }
                         std::this_thread::sleep_for(std::chrono::duration<int32_t, std::micro>(player.delay()));
                     }
                 }
-                else { // LCOV_EXCL_LINE
+                else {
                     std::this_thread::sleep_for(std::chrono::duration<int32_t, std::milli>(100)); // LCOV_EXCL_LINE
-                }
+                } // LCOV_EXCL_LINE
             }
             retCode = 0;
         }
