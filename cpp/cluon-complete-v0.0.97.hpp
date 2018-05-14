@@ -1,6 +1,6 @@
 // This is an auto-generated header-only single-file distribution of libcluon.
-// Date: Sun, 13 May 2018 21:30:49 +0200
-// Version: 0.0.96
+// Date: Mon, 14 May 2018 15:59:13 +0200
+// Version: 0.0.97
 //
 //
 // Implementation of N4562 std::experimental::any (merged into C++17) for C++11 compilers.
@@ -6251,8 +6251,16 @@ class LIBCLUON_API FromJSONVisitor {
         }
     }
 
-   private:
+   public:
+    /**
+     * This method returns the base64-decoded representation for the given input.
+     *
+     * @param input to decode from base64
+     * @return Decoded input.
+     */
     std::string decodeBase64(const std::string &input) const noexcept;
+
+   private:
     std::map<std::string, FromJSONVisitor::JSONKeyValue> readKeyValues(std::string &input) noexcept;
 
    private:
@@ -6361,6 +6369,7 @@ class LIBCLUON_API ToJSONVisitor {
         }
     }
 
+   public:
     /**
      * This method returns the base64-encoded representation for the given input.
      *
@@ -11908,26 +11917,26 @@ inline std::string ToJSONVisitor::encodeBase64(const std::string &input) const n
     uint32_t value{0};
 
     while (length > 2) {
-        value = static_cast<uint32_t>(input.at(index++)) << 16;
-        value |= static_cast<uint32_t>(input.at(index++)) << 8;
-        value |= static_cast<uint32_t>(input.at(index++));
-        retVal += ALPHABET.at((value >> 18) & 63);
-        retVal += ALPHABET.at((value >> 12) & 63);
-        retVal += ALPHABET.at((value >> 6) & 63);
-        retVal += ALPHABET.at(value & 63);
+        value = static_cast<uint32_t>(static_cast<unsigned char>(input.at(index++))) << 16;
+        value |= static_cast<uint32_t>(static_cast<unsigned char>(input.at(index++))) << 8;
+        value |= static_cast<uint32_t>(static_cast<unsigned char>(input.at(index++)));
+        retVal += ALPHABET.at((value & 0xFC0000) >> 18);
+        retVal += ALPHABET.at((value & 0x3F000) >> 12);
+        retVal += ALPHABET.at((value & 0xFC0) >> 6);
+        retVal += ALPHABET.at(value & 0x3F);
         length -= 3;
     }
     if (length == 2) {
-        value = static_cast<uint32_t>(input.at(index++)) << 16;
-        value |= static_cast<uint32_t>(input.at(index++)) << 8;
-        retVal += ALPHABET.at((value >> 18) & 63);
-        retVal += ALPHABET.at((value >> 12) & 63);
-        retVal += ALPHABET.at((value >> 6) & 63);
+        value = static_cast<uint32_t>(static_cast<unsigned char>(input.at(index++))) << 16;
+        value |= static_cast<uint32_t>(static_cast<unsigned char>(input.at(index++))) << 8;
+        retVal += ALPHABET.at((value & 0xFC0000) >> 18);
+        retVal += ALPHABET.at((value & 0x3F000) >> 12);
+        retVal += ALPHABET.at((value & 0xFC0) >> 6);
         retVal += "=";
     } else if (length == 1) {
-        value = static_cast<uint32_t>(input.at(index++)) << 16;
-        retVal += ALPHABET.at((value >> 18) & 63);
-        retVal += ALPHABET.at((value >> 12) & 63);
+        value = static_cast<uint32_t>(static_cast<unsigned char>(input.at(index++))) << 16;
+        retVal += ALPHABET.at((value & 0xFC0000) >> 18);
+        retVal += ALPHABET.at((value & 0x3F000) >> 12);
         retVal += "==";
     }
 

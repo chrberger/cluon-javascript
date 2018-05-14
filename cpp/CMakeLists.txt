@@ -20,7 +20,7 @@ project(ping-pong)
 ################################################################################
 # Defining the relevant version for libcluon and the messages to be used.
 set(MESSAGE_SET example.odvd)
-set(CLUON_COMPLETE cluon-complete-v0.0.96.hpp)
+set(CLUON_COMPLETE cluon-complete-v0.0.97.hpp)
 
 ################################################################################
 # This project requires C++14 or newer.

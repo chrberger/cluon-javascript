@@ -27,10 +27,10 @@ This compiler is contained in the single-file, header-only distribution. To comp
 the message compiler from the header-only library, we set the compiler definition
 `HAVE_CLUON_MSC`. As the GNU compiler does not allow to create executables from
 a given .hpp file, we create a symbolic link to the single-file, header-only
-`cluon-complete-v0.0.96.hpp` file:
+`cluon-complete-v0.0.97.hpp` file:
 
 ```
-ln -sf cluon-complete-v0.0.96.hpp.hpp cluon-complete.cpp
+ln -sf cluon-complete-v0.0.97.hpp cluon-complete.cpp
 ```
 
 Now, we compile the executable for the message compiler using a C++14-compliant

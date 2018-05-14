@@ -18,7 +18,7 @@ First, a recent version of [libcluon](https://github.com/chrberger/libcluon) nee
 to be added; a complete list of current version is available here: https://bintray.com/chrberger/libcluon/javascript#files
 
 ```javascript
-<script src="libcluon-v0.0.96.js"></script>
+<script src="libcluon-v0.0.97.js"></script>
 ```
 
 Next, you need to set a handle to [libcluon](https://github.com/chrberger/libcluon)
