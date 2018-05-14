@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM chalmersrevere/opendlv-ui-server-armhf:v0.0.6
+FROM chalmersrevere/opendlv-ui-server-armhf:v0.0.8
 MAINTAINER Christian Berger "christian.berger@gu.se"
 
 ADD . /opt/cluon-javascript-example/
