@@ -27,10 +27,10 @@ This compiler is contained in the single-file, header-only distribution. To comp
 the message compiler from the header-only library, we set the compiler definition
 `HAVE_CLUON_MSC`. As the GNU compiler does not allow to create executables from
 a given .hpp file, we create a symbolic link to the single-file, header-only
-`cluon-complete-v0.0.97.hpp` file:
+`cluon-complete-v0.0.104.hpp` file:
 
 ```
-ln -sf cluon-complete-v0.0.97.hpp cluon-complete.cpp
+ln -sf cluon-complete-v0.0.104.hpp cluon-complete.cpp
 ```
 
 Now, we compile the executable for the message compiler using a C++14-compliant
@@ -40,18 +40,10 @@ compiler. The `cluon-msc` tool depends on pthreads on Linux.
 g++ -DHAVE_CLUON_MSC -std=c++14 -pthread -o cluon-msc cluon-complete.cpp
 ```
 
-Next, we create the C++ header file from our message specification file `example.odvd`:
+Next, we create the self-contained, C++14-compliant header file from our message specification file `example.odvd`:
 
 ```
-./cluon-msc --cpp-headers --out=example.hpp example.odvd
-```
-
-Next, we create the C++ source file from our message specification file `example.odvd`;
-in addition, we need to specify the file name of the header file that belongs to
-it and that we just created before:
-
-```
-./cluon-msc --cpp-sources --out=example.cpp --cpp-add-include-file=example.hpp example.odvd
+./cluon-msc --cpp --out=example.hpp example.odvd
 ```
 
 Now, we can create a simple C++ program, that is using an `OD4Session` to

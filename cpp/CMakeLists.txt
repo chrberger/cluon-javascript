@@ -20,7 +20,7 @@ project(ping-pong)
 ################################################################################
 # Defining the relevant version for libcluon and the messages to be used.
 set(MESSAGE_SET example.odvd)
-set(CLUON_COMPLETE cluon-complete-v0.0.97.hpp)
+set(CLUON_COMPLETE cluon-complete-v0.0.104.hpp)
 
 ################################################################################
 # This project requires C++14 or newer.
@@ -62,11 +62,10 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/cluon-msc
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${CLUON_COMPLETE})
 
 ################################################################################
-# Generate example.{hpp,cpp} from ${MESSAGE_SET} file.
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/example.cpp
+# Generate example.hpp from ${MESSAGE_SET} file.
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/example.hpp
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_BINARY_DIR}/cluon-msc --cpp-sources --cpp-add-include-file=example.hpp --out=${CMAKE_BINARY_DIR}/example.cpp ${CMAKE_CURRENT_SOURCE_DIR}/${MESSAGE_SET}
-    COMMAND ${CMAKE_BINARY_DIR}/cluon-msc --cpp-headers --out=${CMAKE_BINARY_DIR}/example.hpp ${CMAKE_CURRENT_SOURCE_DIR}/${MESSAGE_SET}
+    COMMAND ${CMAKE_BINARY_DIR}/cluon-msc --cpp --out=${CMAKE_BINARY_DIR}/example.hpp ${CMAKE_CURRENT_SOURCE_DIR}/${MESSAGE_SET}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${MESSAGE_SET} ${CMAKE_BINARY_DIR}/cluon-msc)
 # Add current build directory as include directory as it contains generated files.
 include_directories(SYSTEM ${CMAKE_BINARY_DIR})
@@ -74,13 +73,16 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ################################################################################
 # Gather all object code first to avoid double compilation.
-add_library(${PROJECT_NAME}-core OBJECT ${CMAKE_BINARY_DIR}/example.cpp)
 set(LIBRARIES Threads::Threads)
 
 ################################################################################
 # Create executable.
-add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.cpp $<TARGET_OBJECTS:${PROJECT_NAME}-core>)
+add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+
+# Add dependency to generate .hpp file.
+add_custom_target(generate_example_hpp DEPENDS ${CMAKE_BINARY_DIR}/example.hpp)
+add_dependencies(${PROJECT_NAME} generate_example_hpp)
 
 ################################################################################
 # Install executable.
