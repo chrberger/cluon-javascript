@@ -1,0 +1,24 @@
+{
+  "name": "cluon-javascript",
+  "version": "0.0.1",
+  "description": "Minimum viable product (MVP) demonstrating how to communicate between JavaScript and OD4Sessions using libcluon. ",
+  "main": "js/libcluon-v0.0.104.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrberger/cluon-javascript.git"
+  },
+  "keywords": [
+    "libcluon",
+    "opendlv",
+    "protobuf"
+  ],
+  "author": "Christian Berger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrberger/cluon-javascript/issues"
+  },
+  "homepage": "https://github.com/chrberger/cluon-javascript#readme"
+}
