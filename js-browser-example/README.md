@@ -1,4 +1,4 @@
-# cluon-javascript-js
+# cluon-javascript-js: browser
 This sub-project contains the JavaScript part of the JavaScript--C++ communication demo.
 
 ## Table of Contents
@@ -15,11 +15,14 @@ to send a message from a C++ program via WebSockets to JavaScript. In a JavaScri
 application, this message is received, unpacked, and responded to.
 
 First, a recent version of [libcluon](https://github.com/chrberger/libcluon) needs
-to be added; a complete list of current version is available here: https://bintray.com/chrberger/libcluon/javascript#files
+to be added; a complete list of current versions is available here: https://bintray.com/chrberger/libcluon/javascript#files
 
 ```javascript
-<script src="libcluon-v0.0.97.js"></script>
+<script src="./libcluon.js"></script>
 ```
+
+Note that you can also install the library as an npm package:
+``npm install libcluon``.
 
 Next, you need to set a handle to [libcluon](https://github.com/chrberger/libcluon)
 so that you can access the built-in functions:
@@ -137,10 +140,11 @@ docker run --rm -ti --net=host chrberger/cluon-javascript-js-amd64:latest --cid=
 Now, point your web-browser to http://localhost:8082.
 
 ## Building
-To build this microservice, simply build it using Docker:
+To build this microservice, simply build it using Docker, from the **root directory** of this project
+(if you are in the ``js-browser-example``, cd to ``../``):
 
 ```
-docker build -t javascript-example -f Dockerfile.amd64 .
+build -t javascript-example -f js-browser-example/Dockerfile.amd64 .
 ```
 
 Then, you can run your microservice:

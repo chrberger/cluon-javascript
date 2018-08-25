@@ -13,8 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM chalmersrevere/opendlv-ui-server-armhf:v0.0.8
+FROM chalmersrevere/opendlv-ui-server-amd64:v0.0.8
 MAINTAINER Christian Berger "christian.berger@gu.se"
 
-ADD . /opt/cluon-javascript-example/
+ADD ./js-browser-example /opt/cluon-javascript-example
+ADD ./bin/libcluon.js /opt/cluon-javascript-example/libcluon.js
 ENTRYPOINT ["/usr/bin/opendlv-ui-server", "--http-root=/opt/cluon-javascript-example", "--port=8082"]

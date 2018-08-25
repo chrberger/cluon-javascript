@@ -1,0 +1,15 @@
+{
+  "name": "libcluon-node-js-example",
+  "version": "0.0.1",
+  "description": "Simple Node.js example of how to use libcluon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "libcluon": "file:..",
+    "websocket": "^1.0.26"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "libcluon",
+  "version": "0.0.104",
+  "description": "JavaScript version of the libcluon library: ",
+  "main": "bin/libcluon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrberger/cluon-javascript.git"
+  },
+  "keywords": [
+    "libcluon",
+    "opendlv",
+    "protobuf"
+  ],
+  "author": "Christian Berger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrberger/cluon-javascript/issues"
+  },
+  "homepage": "https://github.com/chrberger/cluon-javascript#readme"
+}
