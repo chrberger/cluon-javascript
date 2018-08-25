@@ -1,8 +1,8 @@
 {
-  "name": "cluon-javascript",
-  "version": "0.0.1",
-  "description": "Minimum viable product (MVP) demonstrating how to communicate between JavaScript and OD4Sessions using libcluon. ",
-  "main": "js/libcluon-v0.0.104.js",
+  "name": "libcluon",
+  "version": "0.0.104",
+  "description": "JavaScript version of the libcluon library: ",
+  "main": "bin/libcluon.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
